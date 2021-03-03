@@ -15,47 +15,42 @@ struct ApiReader {
         URLSession.shared.dataTask(with: request) { data, response, error in
                         
             guard let data = data else { return }
+
+            do {
+                let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+                
+                //print(json)
+                
+                guard let json1 = json else { return }
+                writeFile(filename: "WhereAreYou", datas: json1)
+            }
+            catch {
+            }
             
-            let string = String(data: data, encoding: .utf8)
             
-            guard let s = string else { return }
-            
-            print(s)
-            
-            writeFile(filename: "data", data: s)
             
         }.resume()
     }
     
-    static func writeFile(filename: String, data: String) {
+    static func writeFile(filename: String, datas: [String: Any]) {
         
-        //let file: FileHandle? = FileHandle(forWritingAtPath: "../Data/\(filename).json")
+        print(datas["results"]!)
+        guard let data: String = datas["results"] as! String? else { return }
         
-        //print("FILE \(String(describing: file))")
-        
-        //if (file != nil) {
-        
-        guard let url = Bundle.main.url(
-                    forResource: filename,
-                    withExtension: "json"
-                ) else {
-                    fatalError("FILE NOT FOUND")
-                }
-    
-        do {
+            if let jsonData = data.data(using: .utf8),
+                let documentDirectory = FileManager.default.urls(for: .documentDirectory,
+                                                                 in: .userDomainMask).first {
+                let pathWithFileName = documentDirectory.appendingPathComponent(filename)
                 
-            if let jsonData = try JSONSerialization.data(withJSONObject: filename, options:.init(rawValue: 0)) as? Data {
-                file?.write(jsonData)
+                print("AFTER PATHWITHFILENAME")
+                
+                do {
+                    try jsonData.write(to: pathWithFileName)
+                } catch {
+                    print("ERROR \(error)")
+                }
+                
+                print("HELLO")
             }
         }
-        catch {
-            fatalError("CANT WRITE")
-        }
-            
-        //    file?.closeFile()
-        //}
-        //else {
-        //    print("echec")
-        //}
     }
-}
