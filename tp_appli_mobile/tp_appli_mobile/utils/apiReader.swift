@@ -15,16 +15,18 @@ struct ApiReader {
         URLSession.shared.dataTask(with: request) { data, response, error in
                         
             guard let data = data else { return }
-
+            
             do {
-                let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+//                guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
                 
-                //print(json)
+                let decoded = try JSONDecoder().decode(Initial.self, from: data)
+                print(decoded.results[0])
                 
-                guard let json1 = json else { return }
-                writeFile(filename: "WhereAreYou", datas: json1)
+                writeFile(filename: "WhereAreYou", datas: decoded.results)
+
             }
             catch {
+                print("ERROR \(error)")
             }
             
             
@@ -32,25 +34,29 @@ struct ApiReader {
         }.resume()
     }
     
-    static func writeFile(filename: String, datas: [String: Any]) {
-        
-        print(datas["results"]!)
-        guard let data: String = datas["results"] as! String? else { return }
-        
-            if let jsonData = data.data(using: .utf8),
-                let documentDirectory = FileManager.default.urls(for: .documentDirectory,
-                                                                 in: .userDomainMask).first {
-                let pathWithFileName = documentDirectory.appendingPathComponent(filename)
+    static func writeFile(filename: String, datas: [Music2]) {
+               
+        for music in datas {
+            print("MUSIC \(music)")
+            do {
+                let jsonData = try JSONEncoder().encode(music)
+                //let json = String(data: jsonData, encoding: String.Encoding.utf8)
                 
-                print("AFTER PATHWITHFILENAME")
-                
-                do {
-                    try jsonData.write(to: pathWithFileName)
-                } catch {
-                    print("ERROR \(error)")
+                //ecrit pas dans data mais dans le telephone simulé
+                if let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                    print(documentDirectory)
+                    let pathWithFileName = documentDirectory.appendingPathComponent("myJsonData")
+                    do {
+                        try jsonData.write(to: pathWithFileName)
+                    } catch {
+                        print("ERROR1 \(error)")                    }
+                } else {
+                    print("ELSE")
                 }
-                
-                print("HELLO")
+            } catch {
+                print("ERROR2 \(error)")
             }
         }
+        
     }
+}
