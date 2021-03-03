@@ -12,6 +12,9 @@ struct PlaylistView: View {
     @State var playlist = PlaylistViewModel()
     
     var body: some View {
+        
+        
+        
         NavigationView {
             List {
                 ForEach(playlist.musics) { music in

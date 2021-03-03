@@ -18,9 +18,12 @@ extension Bundle{
             fatalError("Failed to load \(file) in bundle.")
         }
         
+        print("DATA \(data)")
+        
         let decoder = JSONDecoder()
         
         //T.self = le type lui même
+        
         guard let loaded = try? decoder.decode(T.self, from : data) else {
             fatalError("Failed to decode \(file) in bundle.")
         }

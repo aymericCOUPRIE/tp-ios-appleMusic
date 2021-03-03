@@ -1,12 +1,12 @@
 [
     {
-        trackName: "Can't hold us",
-        artist: "Macklemore",
-        album: "The Heist"
+        "trackName": "Can't hold us",
+        "artist": "Macklemore",
+        "album": "The Heist"
     },
     {
-        trackName: "A",
-        artist: "B",
-        album: "C"
+        "trackName": "A",
+        "artist": "B",
+        "album": "C"
     }
 ]
