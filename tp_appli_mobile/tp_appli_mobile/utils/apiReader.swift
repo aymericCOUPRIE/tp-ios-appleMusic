@@ -29,23 +29,33 @@ struct ApiReader {
     
     static func writeFile(filename: String, data: String) {
         
-        let file: FileHandle? = FileHandle(forWritingAtPath: "\(filename).json")
+        //let file: FileHandle? = FileHandle(forWritingAtPath: "../Data/\(filename).json")
         
-        if (file != nil) {
-                        
-            do {
-                if let jsonData = try JSONSerialization.data(withJSONObject: filename, options: .init(rawValue: 0)) as? Data {
-                    file?.write(jsonData)
+        //print("FILE \(String(describing: file))")
+        
+        //if (file != nil) {
+        
+        guard let url = Bundle.main.url(
+                    forResource: filename,
+                    withExtension: "json"
+                ) else {
+                    fatalError("FILE NOT FOUND")
                 }
-            }
-            catch {
+    
+        do {
                 
+            if let jsonData = try JSONSerialization.data(withJSONObject: filename, options:.init(rawValue: 0)) as? Data {
+                file?.write(jsonData)
             }
+        }
+        catch {
+            fatalError("CANT WRITE")
+        }
             
-            file?.closeFile()
-        }
-        else {
-            print("echec")
-        }
+        //    file?.closeFile()
+        //}
+        //else {
+        //    print("echec")
+        //}
     }
 }

@@ -13,7 +13,21 @@ struct PlaylistView: View {
     
     var body: some View {
         
-        
+        VStack {
+            Spacer()
+            Group{
+                HStack{
+                    Text("Search music/artist")
+                }
+                HStack{
+                    Spacer()
+                    Button("Confirm") {
+                        ApiReader.readURL(url: "https://itunes.apple.com/search?term=muse&entity=song&attribute=allArtistTerm")
+                    }
+                    Spacer()
+                }
+            }
+        }
         
         NavigationView {
             List {
