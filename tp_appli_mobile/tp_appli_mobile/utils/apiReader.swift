@@ -17,46 +17,28 @@ struct ApiReader {
             guard let data = data else { return }
             
             do {
-//                guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
-                
                 let decoded = try JSONDecoder().decode(Initial.self, from: data)
-                print(decoded.results[0])
-                
                 writeFile(filename: "WhereAreYou", datas: decoded.results)
-
             }
             catch {
                 print("ERROR \(error)")
             }
-            
-            
-            
         }.resume()
     }
     
     static func writeFile(filename: String, datas: [Music2]) {
-               
-        for music in datas {
-            print("MUSIC \(music)")
+        if let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             do {
-                let jsonData = try JSONEncoder().encode(music)
-                //let json = String(data: jsonData, encoding: String.Encoding.utf8)
-                
-                //ecrit pas dans data mais dans le telephone simulé
-                if let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-                    print(documentDirectory)
-                    let pathWithFileName = documentDirectory.appendingPathComponent("myJsonData")
-                    do {
-                        try jsonData.write(to: pathWithFileName)
-                    } catch {
-                        print("ERROR1 \(error)")                    }
-                } else {
-                    print("ELSE")
-                }
-            } catch {
-                print("ERROR2 \(error)")
+                let jsonData = try JSONEncoder().encode(datas)
+                //print(documentDirectory)
+
+                let pathWithFileName = documentDirectory.appendingPathComponent("myJsonData.json")
+                try jsonData.write(to: pathWithFileName, options: .atomic)
+        } catch {
+                print("ERROR1 \(error)")
             }
+        } else {
+            print("ELSE")
         }
-        
     }
 }

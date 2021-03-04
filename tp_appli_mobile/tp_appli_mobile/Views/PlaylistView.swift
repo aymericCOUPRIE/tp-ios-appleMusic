@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PlaylistView: View {
     
+    @State var search: String = "muse"
     @State var playlist = PlaylistViewModel()
     
     var body: some View {
@@ -17,12 +18,13 @@ struct PlaylistView: View {
             Spacer()
             Group{
                 HStack{
-                    Text("Search music/artist")
+                    TextField("Search music/artist", text: $search)
                 }
                 HStack{
                     Spacer()
                     Button("Confirm") {
-                        ApiReader.readURL(url: "https://itunes.apple.com/search?term=muse&entity=song&attribute=allArtistTerm")
+                        print("SEARCH \(search)")
+                        ApiReader.readURL(url: "https://itunes.apple.com/search?term=\(search)&entity=song&attribute=allArtistTerm")
                     }
                     Spacer()
                 }
